@@ -41,7 +41,12 @@ export default function Body() {
             },
             body: JSON.stringify(newNote),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.status === 400) {
+                    throw new Error("Title or content can't be empty");
+                }
+                return res.json();
+            })
             .then((addedNote) => {
                 setNotes([...noteArray, addedNote]);
             })

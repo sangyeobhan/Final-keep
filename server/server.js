@@ -11,7 +11,7 @@ const mongodburi = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PA
 async function connect() {
     try {
         await mongoose.connect(mongodburi);
-        console.log("connected to mongoDB");
+        console.log("Connected to mongoDB");
     } catch (e) {
         console.error(e);
     }
@@ -44,11 +44,17 @@ app.get("/notes", async (req, res) => {
 app.post("/notes", async (req, res) => {
     const { title, content } = req.body;
 
+    if (title.trim() === "" || content.trim() === "") {
+        return res
+            .status(400)
+            .json({ message: "Title or content can't be empty" });
+    }
+
     try {
         const newNote = new Note({ title, content });
         await newNote.save();
         res.status(201).json(newNote);
-    } catch {
+    } catch (e) {
         console.error(e);
         res.status(500).send(e);
     }
@@ -59,7 +65,7 @@ app.delete("/notes/:id", async (req, res) => {
     try {
         const deletedNote = await Note.findByIdAndDelete(id);
         res.status(200).json(deletedNote);
-    } catch {
+    } catch (e) {
         console.error(e);
         res.status(500).send(e);
     }
