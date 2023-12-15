@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputForm from "./cards/InputForm";
 import Note from "./cards/Note";
-import { notes } from "../notes";
 
 export default function Body() {
-    const [noteArray, setNotes] = useState(notes);
+    const [noteArray, setNotes] = useState([]);
+
+    useEffect(() => {
+        fetch("/api")
+            .then((res) => res.json())
+            .then((data) => {
+                data = data.notes;
+                console.log(data);
+                setNotes(data);
+            });
+    }, []);
 
     const hanleDeleteButton = (key) => {
         const updatedNoteArray = noteArray.filter((note) => note.key !== key);
