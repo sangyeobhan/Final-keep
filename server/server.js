@@ -53,6 +53,7 @@ app.post("/notes", async (req, res) => {
     try {
         const newNote = new Note({ title, content });
         await newNote.save();
+        console.log("Add complete: ", newNote);
         res.status(201).json(newNote);
     } catch (e) {
         console.error(e);
@@ -64,6 +65,7 @@ app.delete("/notes/:id", async (req, res) => {
     const { id } = req.params;
     try {
         const deletedNote = await Note.findByIdAndDelete(id);
+        console.log("Delete complete: ", deletedNote);
         res.status(200).json(deletedNote);
     } catch (e) {
         console.error(e);
