@@ -1,5 +1,4 @@
 client/node_modules
-client/package-lock.json
 
 # dependencies/node_modules
 client/.pnp
