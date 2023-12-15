@@ -10,19 +10,42 @@ export default function Body() {
             .then((res) => res.json())
             .then((data) => {
                 data = data.notes;
-                console.log(data);
                 setNotes(data);
-            });
+            })
+            .catch((e) => console.error(e));
     }, []);
 
-    const hanleDeleteButton = (key) => {
-        const updatedNoteArray = noteArray.filter((note) => note.key !== key);
-        setNotes(updatedNoteArray);
+    const hanleDeleteButton = (id) => {
+        fetch(`/notes/${id}`, {
+            method: "DELETE",
+        })
+            .then((res) => res.json())
+            .then((deletedNote) => {
+                console.log(deletedNote);
+                console.log(noteArray);
+                const updatedNoteArray = noteArray.filter(
+                    (note) => note._id !== deletedNote._id
+                );
+                console.log(updatedNoteArray);
+
+                setNotes(updatedNoteArray);
+            })
+            .catch((e) => console.error(e));
     };
 
-    const addNote = (note) => {
-        const updatedNoteArray = [...noteArray, { key: Date.now(), ...note }];
-        setNotes(updatedNoteArray);
+    const addNote = (newNote) => {
+        fetch("/notes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newNote),
+        })
+            .then((res) => res.json())
+            .then((addedNote) => {
+                setNotes([...noteArray, addedNote]);
+            })
+            .catch((e) => console.error(e));
     };
 
     return (
@@ -32,10 +55,10 @@ export default function Body() {
                 {noteArray.map((note) => {
                     return (
                         <Note
-                            key={note.key}
+                            key={note._id}
                             note={note}
                             hanleDeleteButton={() =>
-                                hanleDeleteButton(note.key)
+                                hanleDeleteButton(note._id)
                             }
                         />
                     );
