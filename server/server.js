@@ -1,35 +1,65 @@
+require("dotenv").config();
+
 const express = require("express");
+const { default: mongoose } = require("mongoose");
 const app = express();
 
-app.get("/api", (req, res) => {
-    res.json({
-        notes: [
-            {
-                key: 1,
-                title: "Delegation",
-                content:
-                    "Q. How many programmers does it take to change a light bulb? A. None – It’s a hardware problem",
-            },
-            {
-                key: 2,
-                title: "Loops",
-                content:
-                    "How to keep a programmer in the shower forever. Show him the shampoo bottle instructions: Lather. Rinse. Repeat.",
-            },
-            {
-                key: 3,
-                title: "Arrays",
-                content:
-                    "Q. Why did the programmer quit his job? A. Because he didn't get arrays.",
-            },
-            {
-                key: 4,
-                title: "Hardware vs. Software",
-                content:
-                    "What's the difference between hardware and software? You can hit your hardware with a hammer, but you can only curse at your software.",
-            },
-        ],
-    });
+//connect to mongodb
+const mongodburi = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.f2g4ftd.mongodb.net/keep?retryWrites=true&w=majority`;
+async function connect() {
+    try {
+        await mongoose.connect(mongodburi);
+        console.log("connected to mongoDB");
+    } catch (e) {
+        console.error(e);
+    }
+}
+connect();
+
+//create schema for each notes
+const noteSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+    },
+    content: {
+        type: String,
+        required: true,
+    },
+});
+const Note = mongoose.model("Note", noteSchema);
+
+app.get("/notes", async (req, res) => {
+    try {
+        const notes = await Note.find();
+        res.json({ notes });
+    } catch (e) {
+        console.error(e);
+        res.status(500).send(e);
+    }
+});
+
+app.post("/notes", async (req, res) => {
+    const { title, content } = req.body;
+
+    try {
+        const newNote = new Note({ title, content });
+        await newNote.save();
+    } catch {
+        console.error(e);
+        res.status(500).send(e);
+    }
+});
+
+app.delete("/notes/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deletedNote = await Note.findByIdAndDelete(id);
+        res.send(deletedNote);
+    } catch {
+        console.error(e);
+        res.status(500).send(e);
+    }
 });
 
 app.listen(5001, () => {

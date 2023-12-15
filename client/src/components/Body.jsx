@@ -6,7 +6,7 @@ export default function Body() {
     const [noteArray, setNotes] = useState([]);
 
     useEffect(() => {
-        fetch("/api")
+        fetch("/notes")
             .then((res) => res.json())
             .then((data) => {
                 data = data.notes;
