@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a final-keep project, which clones google keep. Client is built in react, Server is built in express and connects with mondoDB Atlas.
+This is a final-keep project, Which clones google keep. Client is built in react, Server is built in express and connects with mondoDB Atlas.
 
 ## Getting Started
 
@@ -16,7 +16,7 @@ This is a final-keep project, which clones google keep. Client is built in react
 
 1.  **Move to server dir and setup .env**
 
-2.  **Move to server dir and Install packages**
+2.  **Install packages**
 
 ```bash
 
@@ -98,7 +98,7 @@ const handleSubmit = (e) => {
 
 ### From Server
 
--   This will probably not invoked because empty note is already filtered from the client (InputForm.jsx)
+-   This will probably not be invoked because empty note is already filtered from the client (InputForm.jsx provided above)
 -   But when invoked, server respond to client with 400 status code and "Title or content can't be empty" message. When clients receive the response from the server, it logs (console.error("Title or content can't be empty") on console.
 
 ```javascript
