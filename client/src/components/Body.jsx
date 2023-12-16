@@ -21,12 +21,9 @@ export default function Body() {
         })
             .then((res) => res.json())
             .then((deletedNote) => {
-                console.log(deletedNote);
-                console.log(noteArray);
                 const updatedNoteArray = noteArray.filter(
                     (note) => note._id !== deletedNote._id
                 );
-                console.log(updatedNoteArray);
 
                 setNotes(updatedNoteArray);
             })

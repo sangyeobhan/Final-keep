@@ -34,7 +34,7 @@ const Note = mongoose.model("Note", noteSchema);
 app.get("/notes", async (req, res) => {
     try {
         const notes = await Note.find();
-        res.json({ notes });
+        res.status(200).json({ notes });
     } catch (e) {
         console.error(e);
         res.status(500).send(e);
